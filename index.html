@@ -572,7 +572,7 @@ function openMissionVideo(){
  const video=$('missionVideo');video.pause();video.currentTime=0;video.muted=soundMuted;
  video.setAttribute('aria-label',t('videoLabel'));$('missionVideoMessage').classList.add('hidden');
  const dialog=$('missionDialog');
- dialog.classList.toggle('landing-video',state==='intro');
+ dialog.classList.toggle('landing-video',state==='intro'&&window.innerWidth>700);
  $('missionVideoTitle').textContent=state==='intro'?'GET STARTED':t('mission');
  if(state==='intro')fitLanding();
  dialog.showModal();$('missionClose').focus({preventScroll:true});
