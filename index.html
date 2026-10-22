@@ -465,7 +465,7 @@ Object.assign(translations.tr,{closeVideo:'KAPAT',videoLabel:'Görev tanıtımı
 let missionOpen=false,missionWasPaused=false,missionMusicWasPlaying=false,missionReturnFocus=null,landingMusicEnabled=true;
 let contactOpen=false,contactWasPaused=false,contactReturnFocus=null;
 let soundMuted=false,paused=false,busy=false,sessionId=0,remainingMs=0,lastTick=0,correctSelections=0,stageResults=[],cloudPixels=null,cloudElapsed=0;
-try{soundMuted=localStorage.getItem('connect-destiny-muted')==='true'}catch(_){}
+try{localStorage.removeItem('connect-destiny-muted')}catch(_){} /* jeder Besuch startet mit Ton (Messe-Betrieb) */
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 let lang='en',state='intro',stage=0,queue=[],index=0,current=null,timeLeft=0,timer=null,cloudRAF=null,attempts=0,hits=0,altFound=0,completed=[],currentChain=null,chainIndex=0,lastCloudCheck=0,connectedCountryCities=[];
 const $=id=>document.getElementById(id),citiesLayer=$('cities'),countryLabelsLayer=$('countryLabels'),routesLayer=$('routes'),planeLayer=$('planeLayer'),cloudFar=$('cloudFar'),cloudNear=$('cloudNear'),cloudLayers=[cloudFar,cloudNear];
