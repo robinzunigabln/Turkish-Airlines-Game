@@ -688,6 +688,13 @@ $('contactForm').addEventListener('submit',e=>{e.preventDefault();$('contactForm
 const firstGesture=e=>{if(state==='intro'){if(e.target&&e.target.closest&&e.target.closest('#landingMusicToggle,#startButton'))return;startLandingMusic()}else unlockAudioSystem()};document.addEventListener('pointerdown',firstGesture,{passive:true});document.addEventListener('pointerup',firstGesture,{passive:true});
 document.addEventListener('keydown',e=>{if(missionOpen){if(e.key==='Escape'){e.preventDefault();closeMissionVideo()}return}if(contactOpen){if(e.key==='Escape'){e.preventDefault();closeContactForm()}return}if(e.repeat||e.altKey||e.ctrlKey||e.metaKey)return;if(state==='intro'&&e.key!=='Enter'&&e.key.toLowerCase()!=='m')startLandingMusic();unlockAudioSystem();if(e.key.toLowerCase()==='m'){toggleSound();return}if(e.key.toLowerCase()==='p'||e.key==='Escape'){setPaused(!paused);return}if(e.key!=='Enter'||e.target.closest('button,[role="button"]'))return;e.preventDefault();if(paused)setPaused(false);else if(state==='intro')startGame();else if(state==='modal')closeModal()});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){if(missionOpen)$('missionVideo').pause();setPaused(true);cancelMusicFade();landingMusic.pause();bgMusic.pause();connectionSound.pause();errorSound.pause()}});
+/* Musik so früh wie möglich: Browser blockieren Ton ohne Interaktion, daher zusätzlich beim ersten click/touchend/keydown,
+   beim Zurückkehren in den Tab und nach dem Laden der Audiodatei erneut versuchen. */
+const musicRetry=e=>{if(state!=='intro'||!landingMusicEnabled||soundMuted||!landingMusic.paused)return;if(e&&e.target&&e.target.closest&&e.target.closest('#landingMusicToggle,#startButton,#introButton,#landingContactButton'))return;startLandingMusic()};
+['click','touchend','keyup'].forEach(t=>document.addEventListener(t,musicRetry,{passive:true}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)musicRetry()});
+addEventListener('pageshow',()=>musicRetry());addEventListener('focus',()=>musicRetry());
+landingMusic.addEventListener('canplaythrough',()=>musicRetry(),{once:true});
 $('landingMusicToggle').addEventListener('click',toggleLandingMusic);$('startButton').addEventListener('click',startGame);$('continueButton').addEventListener('click',closeModal);$('pauseButton').addEventListener('click',()=>setPaused(!paused));$('resumeButton').addEventListener('click',()=>setPaused(false));$('soundButton').addEventListener('click',toggleSound);
 document.querySelectorAll('.lang').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
 renderLand();renderCities();initCloudSampler();initLandingGlobe3d();setLang('en');updateControls();$('startButton').focus();startLandingMusic();
